@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./tcss.css" rel="stylesheet" />
+    <title>Bayonne Muslims Capacity App Login</title>
+  </head>
+  <body class="bg-purple-50 bg-opacity-50">
+    <div class="mt-1">
+      <img src="./img/bm_full_sans.svg" class="m-auto px-6 h-14 w-auto" alt="BM Logo" />
+    </div>
+    <div class="mt-5">
+      <h1 class="text-center m-auto font-bold text-3xl underline">Capacity Tracker Login</h1>
+    </div>
+    <form id="loginForm" action="javascript:void(0);" class="flex flex-col">
+      <label for="password" class="text-center text-xl">Password </label>
+      <input
+        type="password"
+        id="password"
+        class="border border-4 mt-2 border-black w-10/12 mx-auto"
+      />
+      <label for="password" id="errorLabel" class="text-center text-red-500 hidden"
+        >Incorrect password.
+      </label>
+      <button
+        type="submit"
+        class="p-2 bg-green-600 text-xl text-white w-24 mx-auto rounded-md mt-4"
+      >
+        Login
+      </button>
+    </form>
+    <script type="module" src="./js/login.js"></script>
+  </body>
+</html>
