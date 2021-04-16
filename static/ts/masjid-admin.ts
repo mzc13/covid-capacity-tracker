@@ -1,7 +1,7 @@
 /* Project Types Start */
 enum Locations {
-  MAIN_HALL = "Main Hall",
-  MPR = "MPR",
+  MAIN_VACCINATED = "Main (Vaccinated)",
+  MAIN_UNVACCINATED = "Main (Unvaccinated)",
   UPSTAIRS = "Upstairs",
 }
 type DetailedQueryResponse = {
@@ -40,26 +40,26 @@ const lastUpdated = document.getElementById("lastUpdated") as HTMLSpanElement;
 const mainLogo = document.getElementById("mainLogo") as HTMLDivElement;
 let timestamp = -1;
 let prevCounts = {
-  "Main Hall": 0,
-  MPR: 0,
+  "Main (Vaccinated)": 0,
+  "Main (Unvaccinated)": 0,
   Upstairs: 0,
 };
 let counts = {
-  "Main Hall": 0,
-  MPR: 0,
+  "Main (Vaccinated)": 0,
+  "Main (Unvaccinated)": 0,
   Upstairs: 0,
 };
 let updateTimeout = -1;
-let currentLocation = Locations.MAIN_HALL;
+let currentLocation = Locations.MAIN_VACCINATED;
 
 function processQueryResponse(data: DetailedQueryResponse) {
   timestamp = data.masjid_timestamp;
   lastUpdated.innerText = new Date(timestamp).toLocaleString();
-  prevCounts[Locations.MAIN_HALL] = data.main_hall_count;
-  prevCounts[Locations.MPR] = data.mpr_count;
+  prevCounts[Locations.MAIN_VACCINATED] = data.main_hall_count;
+  prevCounts[Locations.MAIN_UNVACCINATED] = data.mpr_count;
   prevCounts[Locations.UPSTAIRS] = data.upstairs_count;
-  counts[Locations.MAIN_HALL] = prevCounts[Locations.MAIN_HALL];
-  counts[Locations.MPR] = prevCounts[Locations.MPR];
+  counts[Locations.MAIN_VACCINATED] = prevCounts[Locations.MAIN_VACCINATED];
+  counts[Locations.MAIN_UNVACCINATED] = prevCounts[Locations.MAIN_UNVACCINATED];
   counts[Locations.UPSTAIRS] = prevCounts[Locations.UPSTAIRS];
   updateCountElement();
 }
@@ -83,9 +83,9 @@ async function updateCapacity() {
   try {
     let reqJson: DetailedUpdateRequest = {
       masjid_count:
-        counts[Locations.MAIN_HALL] + counts[Locations.MPR] + counts[Locations.UPSTAIRS],
-      main_hall_count: counts[Locations.MAIN_HALL],
-      mpr_count: counts[Locations.MPR],
+        counts[Locations.MAIN_VACCINATED] + counts[Locations.MAIN_UNVACCINATED] + counts[Locations.UPSTAIRS],
+      main_hall_count: counts[Locations.MAIN_VACCINATED],
+      mpr_count: counts[Locations.MAIN_UNVACCINATED],
       upstairs_count: counts[Locations.UPSTAIRS],
       timestamp: timestamp,
       parking_count: undefined,
@@ -109,7 +109,7 @@ async function updateCapacity() {
 
 function updateCountElement() {
   masjidCountElement.innerText = counts[currentLocation].toString();
-  capacityLabel.innerText = currentLocation + " Capacity";
+  capacityLabel.innerText = currentLocation;
 }
 
 function btnClick(capacityDiff: number) {
@@ -124,23 +124,23 @@ function btnClick(capacityDiff: number) {
 }
 
 function locationLeftShift() {
-  if (currentLocation == Locations.MAIN_HALL) {
+  if (currentLocation == Locations.MAIN_VACCINATED) {
     currentLocation = Locations.UPSTAIRS;
-  } else if (currentLocation == Locations.MPR) {
-    currentLocation = Locations.MAIN_HALL;
+  } else if (currentLocation == Locations.MAIN_UNVACCINATED) {
+    currentLocation = Locations.MAIN_VACCINATED;
   } else if (currentLocation == Locations.UPSTAIRS) {
-    currentLocation = Locations.MPR;
+    currentLocation = Locations.MAIN_UNVACCINATED;
   }
   updateCountElement();
 }
 
 function locationRightShift() {
-  if (currentLocation == Locations.MAIN_HALL) {
-    currentLocation = Locations.MPR;
-  } else if (currentLocation == Locations.MPR) {
+  if (currentLocation == Locations.MAIN_VACCINATED) {
+    currentLocation = Locations.MAIN_UNVACCINATED;
+  } else if (currentLocation == Locations.MAIN_UNVACCINATED) {
     currentLocation = Locations.UPSTAIRS;
   } else if (currentLocation == Locations.UPSTAIRS) {
-    currentLocation = Locations.MAIN_HALL;
+    currentLocation = Locations.MAIN_VACCINATED;
   }
   updateCountElement();
 }
